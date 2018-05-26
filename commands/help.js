@@ -13,7 +13,7 @@ module.exports = {
             data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
         } else {
             if (!commands.has(args[0])) {
-                return message.reply('[ERROR] You\'re asking for help for a command that doesn\'t exist.');
+                return message.reply('**[ERROR]** You\'re asking for help for a command that doesn\'t exist.');
             }
             const command = commands.get(args[0]);
             data.push(`**Name:** ${command.name}`);
@@ -27,6 +27,6 @@ module.exports = {
                     message.channel.send('Sent you a DM!');
                 }
             })
-            .catch(() => message.reply('[ERROR] My DM failed to reach you!'));
+            .catch(() => message.reply('**[ERROR]** My DM failed to reach you!'));
     },
 };

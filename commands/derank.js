@@ -2,7 +2,7 @@ const { rules, rulesURL } = require('../ruleset.json');
 const { prefix } = require('../config.json');
 module.exports = {
     name: 'derank',
-    description: '[STAFF ONLY] Warns a user for bad behavior and de-ranks them.',
+    description: '**[STAFF ONLY]** Warns a user for bad behavior and de-ranks them.',
     usage: '<user> <rule> [message]',
     args: true,
     guildOnly: true,
@@ -13,15 +13,14 @@ module.exports = {
 
         // - If they gave an invalid number of arguments, throw an error. Stop.
         if(args.length < 2 || args.length > 3) {
-            return message.channel.send(`[ERROR] Invalid number of arguments.\nUsage: \`${prefix}${this.name} ${this.usage}\``);
+            return message.channel.send(`**[ERROR]** Invalid number of arguments.\nUsage: \`${prefix}${this.name} ${this.usage}\``);
         }
 
         // - If they're not in the server, throw an error. Stop.
 
         // - If the rule number isn't valid, throw an error. Stop.
-        if(args[1] < 1 || args[1] > 10) {
-            // ;-; i'm hardcoding the rule numbers here, this feels wrong
-            return message.channel.send('[ERROR] That\'s not a rule.');
+        if(args[1] < 1 || args[1] > Object.keys(rules).length) {
+            return message.channel.send('**[ERROR]** That\'s not a rule.');
         }
         // - If they're already on "U Chattin' Awful", just tell the staff member to ban them. Stop.
         // - If they're not on *any* rank, inform the staff member of the issue. Stop.
