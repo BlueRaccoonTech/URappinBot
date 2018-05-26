@@ -27,6 +27,7 @@ module.exports = {
                     message.channel.send('Sent you a DM!');
                 }
             })
+            // i'm lost.
             .catch(() => message.reply('[ERROR] My DM failed to reach you!'));
     },
 };
