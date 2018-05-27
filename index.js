@@ -44,8 +44,15 @@ client.on('message', message => {
         command.execute(message, args);
     } catch (error) {
         console.error(error);
-        // Hi BloatedC! I'm sure this is gonna be the first thing you change x3
-        message.channel.send('**[ERROR]** OOPSIE WOOPSIE!! Uwu we made a fucky wucky!! A wittle fucko boingo!\nThe code monkeys at our headquarters are working VEWY HAWD to fix this!');
+        // Okay Bloated, how about a compromise?
+        // My silly little error message only shows up if I'm the one who encounters the error. Everyone else gets a normal error message.
+        if(message.author.id == '87801266440278016') {
+            message.channel.send('**[ERROR]** OOPSIE WOOPSIE!! Uwu we made a fucky wucky!! A wittle fucko boingo!\nThe code monkeys at our headquarters are working VEWY HAWD to fix this!');
+        } else {
+            message.channel.send('**[ERROR]** Something unexpected happened when attempting to run the command.\nThe developer has been notified.');
+        }
+        const codemonkey = client.users.get('87801266440278016');
+        codemonkey.send(`**[NOTICE**] A user has encountered an error upon attempting to launch a command.\n\nCommand name: ${commandName}\nArguments: ${args.toString()}`);
     }
 });
 

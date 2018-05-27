@@ -1,4 +1,4 @@
-const { rules, rulesURL } = require('../ruleset.json');
+const { rules, rulesURL, appealURL } = require('../ruleset.json');
 const { prefix, roleList } = require('../config.json');
 module.exports = {
     name: 'derank',
@@ -49,7 +49,7 @@ module.exports = {
 
         // - Send them a DM telling them they've been deranked and why.
         if(coolToGood) {
-            mentMember.send(`Looks like you need a little help staying in-between the lines. Don't worry, I'm back~\n\n(You're being sent this message because you've been found to have violated the rules of the community.\nPlease refer to rule #${args[1]} at this link: ${rulesURL})`)
+            mentMember.send(`Looks like you need a little help staying in-between the lines. Don't worry, I'm back~\n\n(You're being sent this message because you've been found to have violated rule ${args[1]}:\n\`${rules[(args[1])]}\`\n\nFor more information, please see our community guidelines at this link: <${rulesURL}>\n\nIf, after reading the rules, you wish to appeal this decision, please visit this link: <${appealURL}> )`)
             .then(() => {
                 if (message.channel.type !== 'dm') {
                     message.channel.send('Done.');
@@ -57,7 +57,7 @@ module.exports = {
             })
             .catch(() => message.channel.send('**[ERROR]** Could not send a DM to the target member.'));
         } else {
-            mentMember.send(`**GETTING WORSE.**\n\nYou're being sent this message because you've been found to have violated the rules of the community.\nPlease refer to rule #${args[1]} at this link: ${rulesURL}`)
+            mentMember.send(`**GETTING WORSE.**\n\nYou're being sent this message because you've been found to have violated rule ${args[1]}:\n\`${rules[(args[1])]}\`\n\nFor more information, please see our community guidelines at this link: <${rulesURL}>\n\nIf, after reading the rules, you wish to appeal this decision, please visit this link: <${appealURL}>`)
             .then(() => {
                 if (message.channel.type !== 'dm') {
                     message.channel.send('Done! Please use ~rankup on the user in two weeks.');
