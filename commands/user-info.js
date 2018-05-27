@@ -5,5 +5,6 @@ module.exports = {
     guildOnly: false,
     execute(message, args) {
         message.channel.send(`Your user ID, ${message.author.username}, is ${message.author.id}.`);
+        console.log(args);
     },
 };

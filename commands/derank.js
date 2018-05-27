@@ -27,10 +27,12 @@ module.exports = {
         const good = message.guild.roles.find('name', roleList.good);
         const bad = message.guild.roles.find('name', roleList.bad);
         const awful = message.guild.roles.find('name', roleList.awful);
+        let coolToGood = false;
         // - Figure out the rank below theirs, then demote them to that rank.
         if(mentMember.roles.exists('name', roleList.cool)) {
             mentMember.removeRole(cool, `Violating rule #${args[1]}`);
             mentMember.addRole(good);
+            coolToGood = true;
         } else if(mentMember.roles.exists('name', roleList.good)) {
             mentMember.removeRole(good, `Violating rule #${args[1]}`);
             mentMember.addRole(bad);
@@ -46,13 +48,23 @@ module.exports = {
         }
 
         // - Send them a DM telling them they've been deranked and why.
-        mentMember.send(`**GETTING WORSE.**\n\nYou're being sent this message because you've been found to have violated the rules of the community.\nPlease refer to rule #${args[1]} at this link: ${rulesURL}`)
+        if(coolToGood) {
+            mentMember.send(`Looks like you need a little help staying in-between the lines. Don't worry, I'm back~\n\n(You're being sent this message because you've been found to have violated the rules of the community.\nPlease refer to rule #${args[1]} at this link: ${rulesURL})`)
             .then(() => {
                 if (message.channel.type !== 'dm') {
                     message.channel.send('Done! Please use ~rankup on the user in two weeks.');
                 }
             })
             .catch(() => message.channel.send('**[ERROR]** Could not send a DM to the target member.'));
+        } else {
+            mentMember.send(`**GETTING WORSE.**\n\nYou're being sent this message because you've been found to have violated the rules of the community.\nPlease refer to rule #${args[1]} at this link: ${rulesURL}`)
+            .then(() => {
+                if (message.channel.type !== 'dm') {
+                    message.channel.send('Done! Please use ~rankup on the user in two weeks.');
+                }
+            })
+            .catch(() => message.channel.send('**[ERROR]** Could not send a DM to the target member.'));
+        }
         // **POSSIBLE ALTERNATE** Post the derank publicly in #bot-warnings.
     },
 };
