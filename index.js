@@ -27,7 +27,7 @@ client.on('message', message => {
     if (command.guildOnly && message.channel.type !== 'text') {
         return message.reply('**[ERROR]** Command not available in DMs.\nPlease use this command in a server.');
     }
-    // Check if arguments required. If not, throw error and demonstrate usage (if possible.)
+    // Check if arguments required and none used. If not, throw error and demonstrate usage (if possible.)
     if (command.args && !args.length) {
         let reply = '**[ERROR]** No arguments detected for command requiring arguments.';
         if (command.usage) {
@@ -35,12 +35,17 @@ client.on('message', message => {
         }
         return message.channel.send(reply);
     }
+    // Check if staff required and member not staff. If so, throw error.
+    if(command.requireStaff && (message.member.highestRole.name != ('Staff' || 'AlmostStaff' || 'MaybeStaff'))) {
+        return message.channel.send('**[ERROR]** You\'re not a staff member.');
+    }
 
     try {
         command.execute(message, args);
     } catch (error) {
         console.error(error);
-        message.reply('**[ERROR}** OOPSIE WOOPSIE!! Uwu we made a fucky wucky!! A wittle fucko boingo!\nThe code monkeys at our headquarters are working VEWY HAWD to fix this!');
+        // Hi BloatedC! I'm sure this is gonna be the first thing you change x3
+        message.channel.send('**[ERROR]** OOPSIE WOOPSIE!! Uwu we made a fucky wucky!! A wittle fucko boingo!\nThe code monkeys at our headquarters are working VEWY HAWD to fix this!');
     }
 });
 
