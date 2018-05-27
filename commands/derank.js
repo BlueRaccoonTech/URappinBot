@@ -52,7 +52,7 @@ module.exports = {
             mentMember.send(`Looks like you need a little help staying in-between the lines. Don't worry, I'm back~\n\n(You're being sent this message because you've been found to have violated the rules of the community.\nPlease refer to rule #${args[1]} at this link: ${rulesURL})`)
             .then(() => {
                 if (message.channel.type !== 'dm') {
-                    message.channel.send('Done! Please use ~rankup on the user in two weeks.');
+                    message.channel.send('Done.');
                 }
             })
             .catch(() => message.channel.send('**[ERROR]** Could not send a DM to the target member.'));
