@@ -21,21 +21,38 @@ module.exports = {
         if(args[1] < 1 || args[1] > Object.keys(rules).length) {
             return message.channel.send('**[ERROR]** That\'s not a rule.');
         }
-        // - If they're already on "U Chattin' Awful", just tell the staff member to ban them. Stop.
-        if(mentMember.roles.exists('name', roleList.awful)) {
+
+        // Define all roles.
+        const cool = message.guild.roles.find('name', roleList.cool);
+        const good = message.guild.roles.find('name', roleList.good);
+        const bad = message.guild.roles.find('name', roleList.bad);
+        const awful = message.guild.roles.find('name', roleList.awful);
+        // - Figure out the rank below theirs, then demote them to that rank.
+        if(mentMember.roles.exists('name', roleList.cool)) {
+            mentMember.removeRole(cool, `Violating rule #${args[1]}`);
+            mentMember.addRole(good);
+        } else if(mentMember.roles.exists('name', roleList.good)) {
+            mentMember.removeRole(good, `Violating rule #${args[1]}`);
+            mentMember.addRole(bad);
+        } else if(mentMember.roles.exists('name', roleList.bad)) {
+            mentMember.removeRole(bad, `Violating rule #${args[1]}`);
+            mentMember.addRole(awful);
+        } else if(mentMember.roles.exists('name', roleList.awful)) {
+            // - If they're already on "U Chattin' Awful", just tell the staff member to ban them. Stop.
             return message.channel.send('**[ERROR]** Target user is already at the lowest rank, consider banning user.');
-        }
-        // - If they're not on *any* rank, inform the staff member of the issue. Stop.
-        if((!mentMember.roles.exists('name', roleList.cool)) && (!mentMember.roles.exists('name', roleList.good)) && (!mentMember.roles.exists('name', roleList.bad))) {
+        } else {
+            // - If they're not on *any* rank, inform the staff member of the issue. Stop.
             return message.channel.send('**[ERROR]** Target user doesn\'t have a role identifying their rank.\nI don\'t know what to demote them to!');
         }
 
-        // - Figure out the rank below theirs, then demote them to that rank.
         // - Send them a DM telling them they've been deranked and why.
+        mentMember.send(`**GETTING WORSE.**\n\nYou're being sent this message because you've been found to have violated the rules of the community.\nPlease refer to rule #${args[1]} at this link: ${rulesURL}`)
+            .then(() => {
+                if (message.channel.type !== 'dm') {
+                    message.channel.send('Done! Please use ~rankup on the user in two weeks.');
+                }
+            })
+            .catch(() => message.channel.send('**[ERROR]** Could not send a DM to the target member.'));
         // **POSSIBLE ALTERNATE** Post the derank publicly in #bot-warnings.
-        // - Figure out what the day two weeks from now is.
-        // - Send staff member a message telling them that the action was successful and to use ~rankup on user two weeks from now.
-
-        message.channel.send('**[ERROR]** Command not functional yet, please try again later.');
     },
 };
