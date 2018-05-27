@@ -28,17 +28,29 @@ module.exports = {
         const bad = message.guild.roles.find('name', roleList.bad);
         const awful = message.guild.roles.find('name', roleList.awful);
         let coolToGood = false;
+        let oldRank = null;
+        let newRank = null;
+        let rankURL = null;
         // - Figure out the rank below theirs, then demote them to that rank.
         if(mentMember.roles.exists('name', roleList.cool)) {
             mentMember.removeRole(cool, `Violating rule #${args[1]}`);
             mentMember.addRole(good);
             coolToGood = true;
+            oldRank = roleList.cool;
+            newRank = roleList.good;
+            rankURL = 'https://i.imgur.com/b3LPpxn.png';
         } else if(mentMember.roles.exists('name', roleList.good)) {
             mentMember.removeRole(good, `Violating rule #${args[1]}`);
             mentMember.addRole(bad);
+            oldRank = roleList.good;
+            newRank = roleList.bad;
+            rankURL = 'https://i.imgur.com/4hOE8Ua.png';
         } else if(mentMember.roles.exists('name', roleList.bad)) {
             mentMember.removeRole(bad, `Violating rule #${args[1]}`);
             mentMember.addRole(awful);
+            oldRank = roleList.bad;
+            newRank = roleList.awful;
+            rankURL = 'https://i.imgur.com/4MBqQAY.png';
         } else if(mentMember.roles.exists('name', roleList.awful)) {
             // - If they're already on "U Chattin' Awful", just tell the staff member to ban them. Stop.
             return message.channel.send('**[ERROR]** Target user is already at the lowest rank, consider banning user.');
@@ -49,7 +61,34 @@ module.exports = {
 
         // - Send them a DM telling them they've been deranked and why.
         if(coolToGood) {
-            mentMember.send(`Looks like you need a little help staying in-between the lines. Don't worry, I'm back~\n\n(You're being sent this message because you've been found to have violated rule ${args[1]}:\n\`${rules[(args[1])]}\`\n\nFor more information, please see our community guidelines at this link: <${rulesURL}>\n\nIf, after reading the rules, you wish to appeal this decision, please visit this link: <${appealURL}> )`)
+            const embed = {
+                'title': 'Uh-oh. Looks like you need some help. I\'m here for ya~',
+                'description': 'You\'re receiving this message because you\'ve violated one of the rules in the Parappa the Rapper 2 Modding Community.',
+                'color': 12451840,
+                'timestamp': new Date(),
+                'footer': {
+                  'icon_url': 'https://cdn.discordapp.com/attachments/305797485769523202/319251953827840000/unknown.png',
+                  'text': 'From the Parappa the Rapper 2 Modding Community',
+                },
+                'thumbnail': {
+                  'url': rankURL,
+                },
+                'fields': [
+                  {
+                    'name': `Rule #${args[1]}`,
+                    'value': `_${rules[(args[1])]}_\n`,
+                  },
+                  {
+                    'name': 'Our Decision',
+                    'value': `You are officially being warned for your actions in our community. As such, we are demoting you to "${newRank}". Further violations of our rules will result in more severe punishments.\n`,
+                  },
+                  {
+                    'name': 'Rules and Appealing Our Decision',
+                    'value': `The rules for our server can be found [here](${rulesURL}). It is highly suggested that you re-read these rules in full, as you will be expected to conform to them.\n\nIf, after reading through our rules, you feel like this decision was unjust, please submit an appeal [at this link](${appealURL}).`,
+                  },
+                ],
+              };
+            mentMember.send({ embed })
             .then(() => {
                 if (message.channel.type !== 'dm') {
                     message.channel.send('Done.');
@@ -57,7 +96,34 @@ module.exports = {
             })
             .catch(() => message.channel.send('**[ERROR]** Could not send a DM to the target member.'));
         } else {
-            mentMember.send(`**GETTING WORSE.**\n\nYou're being sent this message because you've been found to have violated rule ${args[1]}:\n\`${rules[(args[1])]}\`\n\nFor more information, please see our community guidelines at this link: <${rulesURL}>\n\nIf, after reading the rules, you wish to appeal this decision, please visit this link: <${appealURL}>`)
+            const embed = {
+                'title': 'Getting worse.',
+                'description': 'Hello. You\'re receiving this message because you\'ve violated one of the rules in the Parappa the Rapper 2 Modding Community.',
+                'color': 12451840,
+                'timestamp': new Date(),
+                'footer': {
+                  'icon_url': 'https://cdn.discordapp.com/attachments/305797485769523202/319251953827840000/unknown.png',
+                  'text': 'From the Parappa the Rapper 2 Modding Community',
+                },
+                'thumbnail': {
+                  'url': rankURL,
+                },
+                'fields': [
+                  {
+                    'name': `Rule #${args[1]}`,
+                    'value': `_${rules[(args[1])]}_\n`,
+                  },
+                  {
+                    'name': 'Our Decision',
+                    'value': `You are officially being warned for your actions in our community. As such, we are demoting you to "${newRank}". Further violations of our rules will result in more severe punishments.\n\nIf you cooperate with our guidelines for the next two weeks, you will automatically be returned to "${oldRank}".\n`,
+                  },
+                  {
+                    'name': 'Rules and Appealing Our Decision',
+                    'value': `The rules for our server can be found [here](${rulesURL}). It is highly suggested that you re-read these rules in full, as you will be expected to conform to them.\n\nIf, after reading through our rules, you feel like this decision was unjust, please submit an appeal [at this link](${appealURL}).`,
+                  },
+                ],
+              };
+            mentMember.send({ embed })
             .then(() => {
                 if (message.channel.type !== 'dm') {
                     message.channel.send('Done! Please use ~rankup on the user in two weeks.');
