@@ -69,7 +69,7 @@ module.exports = {
               },
               {
                 'name': 'Our Decision',
-                'value': `You are officially being warned for your actions in our community. As such, we are demoting you to "${newRank}". Further violations of our rules will result in more severe punishments.`,
+                'value': `You are officially being warned for your actions in our community. As such, we are demoting you to **${newRank}**. Further violations of our rules will result in more severe punishments.`,
               },
               {
                 'name': 'Rules and Appealing Our Decision',
