@@ -12,6 +12,7 @@ for (const file of commandFiles) {
 
 client.on('ready', () => {
     console.log('Yeah, I know! I gotta believe!');
+    client.user.setActivity('Parappa the Rapper 2', { type: 'PLAYING' });
 });
 
 client.on('message', message => {
