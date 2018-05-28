@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
-const { prefix, token } = require('./config.json');
+const Agenda = require('Agenda');
+const { prefix, token, mongoDB } = require('./config.json');
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands');
@@ -11,6 +12,9 @@ for (const file of commandFiles) {
 }
 
 client.on('ready', () => {
+    // Fire up Agenda to work and run for us.
+    const anagenda = new Agenda({ db: { address: mongoDB } });
+    anagenda.start();
     console.log('Yeah, I know! I gotta believe!');
     client.user.setActivity('Parappa the Rapper 2', { type: 'PLAYING' });
 });
